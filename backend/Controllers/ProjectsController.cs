@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using PizzaProject.Api.DTOs;
+using PizzaProject.Api.Models;
 using PizzaProject.Api.Services;
 
 namespace PizzaProject.Api.Controllers
@@ -25,34 +25,43 @@ namespace PizzaProject.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var p = await _projectService.GetByIdAsync(id);
-            if (p == null) return NotFound();
-            return Ok(p);
+            var project = await _projectService.GetByIdAsync(id);
+            if (project == null) 
+                return NotFound(new { error = "Проект не найден" });
+            return Ok(project);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProjectDto dto)
+        public async Task<IActionResult> Create([FromBody] Project project)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var created = await _projectService.CreateAsync(dto);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
+            var created = await _projectService.CreateAsync(project);
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] CreateProjectDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody] Project projectData)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var updated = await _projectService.UpdateAsync(id, dto);
-            if (!updated) return NotFound();
-            return NoContent();
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
+            var updated = await _projectService.UpdateAsync(id, projectData);
+            if (!updated) 
+                return NotFound(new { error = "Проект не найден" });
+
+            return Ok(new { message = "Проект обновлён" });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _projectService.DeleteAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
+            if (!deleted) 
+                return NotFound(new { error = "Проект не найден" });
+
+            return Ok(new { message = "Проект удалён" });
         }
     }
 }

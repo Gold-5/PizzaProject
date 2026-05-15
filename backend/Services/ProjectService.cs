@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using PizzaProject.Api.Data;
-using PizzaProject.Api.DTOs;
 using PizzaProject.Api.Models;
 
 namespace PizzaProject.Api.Services
@@ -14,24 +13,12 @@ namespace PizzaProject.Api.Services
             _context = context;
         }
 
-        public async Task<ProjectDto> CreateAsync(CreateProjectDto dto)
+        public async Task<Project> CreateAsync(Project project)
         {
-            var project = new Project
-            {
-                Name = dto.Name,
-                Description = dto.Description
-            };
-
+            project.CreatedAt = DateTime.UtcNow;
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
-
-            return new ProjectDto
-            {
-                Id = project.Id,
-                Name = project.Name,
-                Description = project.Description,
-                CreatedAt = project.CreatedAt
-            };
+            return project;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -43,41 +30,28 @@ namespace PizzaProject.Api.Services
             return true;
         }
 
-        public async Task<IEnumerable<ProjectDto>> GetAllAsync()
+        public async Task<List<Project>> GetAllAsync()
+        {
+            return await _context.Projects.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Project?> GetByIdAsync(int id)
         {
             return await _context.Projects
-                .AsNoTracking()
-                .Select(p => new ProjectDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    CreatedAt = p.CreatedAt
-                })
-                .ToListAsync();
-        }
-
-        public async Task<ProjectDto?> GetByIdAsync(int id)
-        {
-            var p = await _context.Projects
-                .AsNoTracking()
+                .Include(p => p.Tasks)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if (p == null) return null;
-            return new ProjectDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                CreatedAt = p.CreatedAt
-            };
         }
 
-        public async Task<bool> UpdateAsync(int id, CreateProjectDto dto)
+        public async Task<bool> UpdateAsync(int id, Project projectData)
         {
             var project = await _context.Projects.FindAsync(id);
             if (project == null) return false;
-            project.Name = dto.Name;
-            project.Description = dto.Description;
+
+            project.Name = projectData.Name;
+            project.Description = projectData.Description;
+            project.StartDate = projectData.StartDate;
+            project.EndDate = projectData.EndDate;
+
             await _context.SaveChangesAsync();
             return true;
         }

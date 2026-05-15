@@ -1,10 +1,11 @@
-using PizzaProject.Api.DTOs;
+using PizzaProject.Api.Models;
 
 namespace PizzaProject.Api.Services
 {
     public interface IAuthService
     {
-        Task<AuthResponseDto> RegisterAsync(RegisterDto dto);
-        Task<AuthResponseDto> LoginAsync(LoginDto dto);
+        Task<User?> RegisterAsync(string username, string email, string password);
+        Task<User?> LoginAsync(string email, string password);
+        User? GetUserById(int id);
     }
 }

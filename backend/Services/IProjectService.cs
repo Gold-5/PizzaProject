@@ -1,13 +1,13 @@
-using PizzaProject.Api.DTOs;
+using PizzaProject.Api.Models;
 
 namespace PizzaProject.Api.Services
 {
     public interface IProjectService
     {
-        Task<IEnumerable<ProjectDto>> GetAllAsync();
-        Task<ProjectDto?> GetByIdAsync(int id);
-        Task<ProjectDto> CreateAsync(CreateProjectDto dto);
-        Task<bool> UpdateAsync(int id, CreateProjectDto dto);
+        Task<List<Project>> GetAllAsync();
+        Task<Project?> GetByIdAsync(int id);
+        Task<Project> CreateAsync(Project project);
+        Task<bool> UpdateAsync(int id, Project project);
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -12,11 +12,16 @@ namespace PizzaProject.Api.Models
 
         public string? Description { get; set; }
 
-        public bool IsCompleted { get; set; } = false;
+        [MaxLength(50)]
+        public string Status { get; set; } = "Запланировано"; // Запланировано, В работе, Выполнено
+
+        public int? AssignedToId { get; set; }
+        public User? AssignedTo { get; set; }
 
         public int ProjectId { get; set; }
         public Project? Project { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? DueDate { get; set; }
     }
 }

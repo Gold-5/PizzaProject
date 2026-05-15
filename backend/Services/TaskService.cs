@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using PizzaProject.Api.Data;
-using PizzaProject.Api.DTOs;
 using PizzaProject.Api.Models;
 
 namespace PizzaProject.Api.Services
@@ -14,30 +13,19 @@ namespace PizzaProject.Api.Services
             _context = context;
         }
 
-        public async Task<TaskDto> CreateAsync(CreateTaskDto dto)
+        public async Task<TaskItem> CreateAsync(TaskItem taskItem)
         {
-            var project = await _context.Projects.FindAsync(dto.ProjectId);
-            if (project == null) throw new ArgumentException("Project not found");
+            var projectExists = await _context.Projects.AnyAsync(p => p.Id == taskItem.ProjectId);
+            if (!projectExists) 
+                throw new ArgumentException("Проект не найден");
 
-            var task = new TaskItem
-            {
-                Title = dto.Title,
-                Description = dto.Description,
-                ProjectId = dto.ProjectId
-            };
+            taskItem.CreatedAt = DateTime.UtcNow;
+            taskItem.Status = "Запланировано";
 
-            _context.TaskItems.Add(task);
+            _context.TaskItems.Add(taskItem);
             await _context.SaveChangesAsync();
 
-            return new TaskDto
-            {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                IsCompleted = task.IsCompleted,
-                ProjectId = task.ProjectId,
-                CreatedAt = task.CreatedAt
-            };
+            return taskItem;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -49,64 +37,58 @@ namespace PizzaProject.Api.Services
             return true;
         }
 
-        public async Task<IEnumerable<TaskDto>> GetAllAsync()
+        public async Task<List<TaskItem>> GetAllAsync()
         {
             return await _context.TaskItems
+                .Include(t => t.Project)
+                .Include(t => t.AssignedTo)
                 .AsNoTracking()
-                .Select(t => new TaskDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    IsCompleted = t.IsCompleted,
-                    ProjectId = t.ProjectId,
-                    CreatedAt = t.CreatedAt
-                })
                 .ToListAsync();
         }
 
-        public async Task<TaskDto?> GetByIdAsync(int id)
-        {
-            var t = await _context.TaskItems.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            if (t == null) return null;
-            return new TaskDto
-            {
-                Id = t.Id,
-                Title = t.Title,
-                Description = t.Description,
-                IsCompleted = t.IsCompleted,
-                ProjectId = t.ProjectId,
-                CreatedAt = t.CreatedAt
-            };
-        }
-
-        public async Task<IEnumerable<TaskDto>> GetByProjectAsync(int projectId)
+        public async Task<TaskItem?> GetByIdAsync(int id)
         {
             return await _context.TaskItems
-                .AsNoTracking()
+                .Include(t => t.Project)
+                .Include(t => t.AssignedTo)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<TaskItem>> GetByProjectAsync(int projectId)
+        {
+            return await _context.TaskItems
+                .Include(t => t.Project)
+                .Include(t => t.AssignedTo)
                 .Where(t => t.ProjectId == projectId)
-                .Select(t => new TaskDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    IsCompleted = t.IsCompleted,
-                    ProjectId = t.ProjectId,
-                    CreatedAt = t.CreatedAt
-                })
+                .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<bool> UpdateAsync(int id, CreateTaskDto dto)
+        public async Task<bool> UpdateAsync(int id, TaskItem taskData)
         {
             var task = await _context.TaskItems.FindAsync(id);
             if (task == null) return false;
-            var project = await _context.Projects.FindAsync(dto.ProjectId);
-            if (project == null) throw new ArgumentException("Project not found");
 
-            task.Title = dto.Title;
-            task.Description = dto.Description;
-            task.ProjectId = dto.ProjectId;
+            task.Title = taskData.Title;
+            task.Description = taskData.Description;
+            task.Status = taskData.Status;
+            task.AssignedToId = taskData.AssignedToId;
+            task.DueDate = taskData.DueDate;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateStatusAsync(int id, string status)
+        {
+            var validStatuses = new[] { "Запланировано", "В работе", "Выполнено" };
+            if (!validStatuses.Contains(status))
+                throw new ArgumentException("Неверный статус");
+
+            var task = await _context.TaskItems.FindAsync(id);
+            if (task == null) return false;
+
+            task.Status = status;
             await _context.SaveChangesAsync();
             return true;
         }
