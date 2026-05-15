@@ -1,12 +1,13 @@
 .projects-page,
-.tasks-page {
+.tasks-page,
+.project-details-page {
     width: 100%;
 }
 
 .page-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 2rem;
     gap: 1rem;
 }
@@ -15,45 +16,71 @@
     color: var(--primary-color);
 }
 
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.back-link:hover {
+    color: var(--primary-color);
+}
+
+.project-desc {
+    color: var(--text-secondary);
+    margin-top: 0.3rem;
+}
+
+/* Create form */
+.create-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
-    background: white;
+    background: var(--bg-card);
     border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
 }
 
 .empty-state p {
     margin-bottom: 0.5rem;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 .empty-state p:first-child {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: var(--dark-color);
+    color: var(--text-primary);
 }
 
-/* Projects */
+/* Projects grid */
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .project-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     padding: 1.5rem;
     transition: var(--transition);
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--border-color);
 }
 
 .project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    border-color: var(--primary-color);
 }
 
 .project-card h3 {
@@ -62,7 +89,7 @@
 }
 
 .project-card p {
-    color: #666;
+    color: var(--text-secondary);
     flex: 1;
     margin-bottom: 1rem;
 }
@@ -75,11 +102,16 @@
 }
 
 .project-date {
-    font-size: 0.875rem;
-    color: #999;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
 }
 
-/* Tasks */
+.project-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Tasks list */
 .tasks-list {
     display: flex;
     flex-direction: column;
@@ -87,56 +119,63 @@
 }
 
 .task-item {
-    background: white;
+    background: var(--bg-card);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     padding: 1.5rem;
     transition: var(--transition);
     border-left: 4px solid var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-color);
 }
 
 .task-item:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
 }
 
 .task-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
     margin-bottom: 0.5rem;
 }
 
 .task-header h3 {
-    color: var(--primary-color);
+    color: var(--text-primary);
     margin: 0;
 }
 
-.task-status {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.875rem;
+.status-select {
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
     font-weight: 600;
+    cursor: pointer;
 }
 
-.status-pending {
+.status-planned {
     background-color: var(--warning-color);
     color: white;
+    border-color: var(--warning-color);
 }
 
-.status-in-progress {
-    background-color: #0066cc;
+.status-progress {
+    background-color: var(--secondary-color);
     color: white;
+    border-color: var(--secondary-color);
 }
 
-.status-completed {
+.status-done {
     background-color: var(--success-color);
     color: white;
+    border-color: var(--success-color);
 }
 
 .task-description {
-    color: #666;
+    color: var(--text-secondary);
     margin: 0.5rem 0 1rem 0;
+    font-size: 0.95rem;
 }
 
 .task-footer {
@@ -146,9 +185,10 @@
     gap: 1rem;
 }
 
-.task-date {
-    font-size: 0.875rem;
-    color: #999;
+.task-date,
+.task-assigned {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
 }
 
 @media (max-width: 768px) {
@@ -157,15 +197,12 @@
         align-items: flex-start;
     }
 
-    .page-header h1 {
-        margin: 0;
-    }
-
     .projects-grid {
         grid-template-columns: 1fr;
     }
 
     .task-header {
         flex-direction: column;
+        align-items: flex-start;
     }
 }

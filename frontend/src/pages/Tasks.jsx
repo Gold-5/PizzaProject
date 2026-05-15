@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { tasksApi } from '../api/endpoints';
+import { TaskService } from '../services/dataService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import '../styles/Tasks.css';
+
+const STATUSES = ['Запланировано', 'В работе', 'Выполнено'];
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -16,13 +18,30 @@ export default function Tasks() {
   const loadTasks = async () => {
     try {
       setLoading(true);
-      const response = await tasksApi.getAll();
-      setTasks(response.data || []);
+      const data = await TaskService.getAllTasks();
+      setTasks(data || []);
     } catch (err) {
       setError(err);
-      console.error('Ошибка загрузки задач:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      await TaskService.updateTaskStatus(id, status);
+      await loadTasks();
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'Запланировано': return 'status-planned';
+      case 'В работе': return 'status-progress';
+      case 'Выполнено': return 'status-done';
+      default: return '';
     }
   };
 
@@ -31,8 +50,7 @@ export default function Tasks() {
   return (
     <div className="tasks-page">
       <div className="page-header">
-        <h1>Задачи</h1>
-        <button className="btn btn-primary">+ Новая задача</button>
+        <h1>Все задачи</h1>
       </div>
 
       {error && <ErrorMessage error={error} onClose={() => setError(null)} />}
@@ -40,24 +58,30 @@ export default function Tasks() {
       {tasks.length === 0 ? (
         <div className="empty-state">
           <p>Задач не найдено</p>
-          <p>Создайте первую задачу</p>
+          <p>Создайте задачу в одном из проектов</p>
         </div>
       ) : (
         <div className="tasks-list">
           {tasks.map((task) => (
             <div key={task.id} className="task-item">
               <div className="task-header">
-                <h3>{task.name}</h3>
-                <span className={`task-status status-${task.status?.toLowerCase() || 'pending'}`}>
-                  {task.status || 'Не определен'}
-                </span>
+                <h3>{task.title}</h3>
+                <select
+                  value={task.status}
+                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                  className={`status-select ${getStatusClass(task.status)}`}
+                >
+                  {STATUSES.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
               </div>
-              <p className="task-description">{task.description}</p>
+              {task.description && <p className="task-description">{task.description}</p>}
               <div className="task-footer">
+                {task.assignedTo && <span className="task-assigned">👤 {task.assignedTo}</span>}
                 <span className="task-date">
                   {new Date(task.createdAt).toLocaleDateString('ru-RU')}
                 </span>
-                <button className="btn btn-sm">Открыть</button>
               </div>
             </div>
           ))}

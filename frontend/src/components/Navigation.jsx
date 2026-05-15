@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import '../styles/Navigation.css';
 
 export default function Navigation() {
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -29,11 +31,18 @@ export default function Navigation() {
               Задачи
             </Link>
           </li>
-          <li className="nav-item">
-            <Link to="/auth" className={`nav-link ${isActive('/auth') ? 'active' : ''}`}>
-              Вход
-            </Link>
-          </li>
+          {isAuthenticated ? (
+            <li className="nav-item nav-user">
+              <span className="nav-username">{user.username}</span>
+              <button className="btn btn-sm btn-logout" onClick={logout}>Выйти</button>
+            </li>
+          ) : (
+            <li className="nav-item">
+              <Link to="/auth" className={`nav-link ${isActive('/auth') ? 'active' : ''}`}>
+                Вход
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

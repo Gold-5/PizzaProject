@@ -17,19 +17,22 @@ export const ProjectService = {
   },
 
   async updateProject(id, data) {
-    const response = await projectsApi.update(id, data);
-    return response.data;
+    await projectsApi.update(id, data);
   },
 
   async deleteProject(id) {
-    const response = await projectsApi.delete(id);
-    return response.data;
+    await projectsApi.delete(id);
   },
 };
 
 export const TaskService = {
-  async getAllTasks(projectId = null) {
-    const response = await tasksApi.getAll(projectId);
+  async getAllTasks() {
+    const response = await tasksApi.getAll();
+    return response.data;
+  },
+
+  async getTasksByProject(projectId) {
+    const response = await tasksApi.getByProject(projectId);
     return response.data;
   },
 
@@ -44,12 +47,14 @@ export const TaskService = {
   },
 
   async updateTask(id, data) {
-    const response = await tasksApi.update(id, data);
-    return response.data;
+    await tasksApi.update(id, data);
+  },
+
+  async updateTaskStatus(id, status) {
+    await tasksApi.updateStatus(id, status);
   },
 
   async deleteTask(id) {
-    const response = await tasksApi.delete(id);
-    return response.data;
+    await tasksApi.delete(id);
   },
 };
