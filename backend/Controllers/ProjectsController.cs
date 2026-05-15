@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using PizzaProject.Api.DTOs;
+using PizzaProject.Api.Models;
 using PizzaProject.Api.Services;
 
 namespace PizzaProject.Api.Controllers
@@ -8,9 +8,9 @@ namespace PizzaProject.Api.Controllers
     [Route("api/[controller]")]
     public class ProjectsController : ControllerBase
     {
-        private readonly IProjectService _projectService;
+        private readonly ProjectService _projectService;
 
-        public ProjectsController(IProjectService projectService)
+        public ProjectsController(ProjectService projectService)
         {
             _projectService = projectService;
         }
@@ -25,24 +25,24 @@ namespace PizzaProject.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var p = await _projectService.GetByIdAsync(id);
-            if (p == null) return NotFound();
-            return Ok(p);
+            var project = await _projectService.GetByIdAsync(id);
+            if (project == null) return NotFound();
+            return Ok(project);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProjectDto dto)
+        public async Task<IActionResult> Create([FromBody] Project project)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var created = await _projectService.CreateAsync(dto);
+            var created = await _projectService.CreateAsync(project);
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] CreateProjectDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody] Project project)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var updated = await _projectService.UpdateAsync(id, dto);
+            var updated = await _projectService.UpdateAsync(id, project);
             if (!updated) return NotFound();
             return NoContent();
         }

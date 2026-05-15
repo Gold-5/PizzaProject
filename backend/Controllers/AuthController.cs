@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using PizzaProject.Api.DTOs;
 using PizzaProject.Api.Services;
 
 namespace PizzaProject.Api.Controllers
@@ -8,21 +7,20 @@ namespace PizzaProject.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly AuthService _authService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(AuthService authService)
         {
             _authService = authService;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var res = await _authService.RegisterAsync(dto);
-                return Ok(res);
+                var user = await _authService.RegisterAsync(request.Username, request.Email, request.Password);
+                return Ok(new { user.Id, user.Username, user.Email, user.Role });
             }
             catch (ArgumentException ex)
             {
@@ -31,18 +29,30 @@ namespace PizzaProject.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto dto)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var res = await _authService.LoginAsync(dto);
-                return Ok(res);
+                var user = await _authService.LoginAsync(request.Email, request.Password);
+                return Ok(new { user.Id, user.Username, user.Email, user.Role });
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
         }
+    }
+
+    public class RegisterRequest
+    {
+        public string Username { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
+    }
+
+    public class LoginRequest
+    {
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
     }
 }

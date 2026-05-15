@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PizzaProject.Api.Models
 {
@@ -12,8 +13,11 @@ namespace PizzaProject.Api.Models
 
         public string? Description { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime StartDate { get; set; } = DateTime.UtcNow;
 
+        public DateTime? EndDate { get; set; }
+
+        [JsonIgnore]
         public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
     }
 }
