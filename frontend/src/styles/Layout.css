@@ -13,15 +13,17 @@
 }
 
 .footer {
-    background-color: var(--dark-color);
-    color: white;
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
     text-align: center;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
     margin-top: auto;
+    border-top: 1px solid var(--border-color);
 }
 
 .footer p {
     margin: 0;
+    font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {

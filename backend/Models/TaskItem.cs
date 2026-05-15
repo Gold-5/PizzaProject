@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PizzaProject.Api.Models
 {
@@ -12,11 +13,18 @@ namespace PizzaProject.Api.Models
 
         public string? Description { get; set; }
 
-        public bool IsCompleted { get; set; } = false;
-
-        public int ProjectId { get; set; }
-        public Project? Project { get; set; }
+        [MaxLength(50)]
+        public string Status { get; set; } = "Запланировано";
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime? DueDate { get; set; }
+
+        public string? AssignedTo { get; set; }
+
+        public int ProjectId { get; set; }
+
+        [JsonIgnore]
+        public Project? Project { get; set; }
     }
 }

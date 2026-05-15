@@ -1,20 +1,19 @@
 .error-message {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .error-content {
-    background-color: #ffe0e0;
-    border: 2px solid var(--error-color);
+    background-color: rgba(255, 77, 77, 0.1);
+    border: 1px solid var(--error-color);
     border-radius: var(--border-radius);
     padding: 1rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    position: relative;
 }
 
 .error-icon {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     flex-shrink: 0;
 }
 

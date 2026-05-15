@@ -1,36 +1,51 @@
 # PizzaProject.Api
 
-Backend Web API for coursework: Pizza delivery projects management.
+Backend Web API для курсовой работы: управление проектами и задачами в службе доставки пиццы.
 
-Features:
+Технологии:
 - ASP.NET Core Web API (.NET 10)
 - Entity Framework Core (Code First)
 - SQL Server
-- JWT Authentication (register/login)
-- Projects and Tasks management
-- Swagger
 
-Connection string: configured in `appsettings.json` (DefaultConnection)
+Строка подключения: настраивается в `appsettings.json` (DefaultConnection)
 
-To run:
-1. Update connection string if necessary.
-2. Open in Visual Studio and run.
-3. The app will apply migrations and seed data on startup.
+## Запуск
 
-API endpoints:
-- GET /api/projects
-- GET /api/projects/{id}
-- POST /api/projects
-- PUT /api/projects/{id}
-- DELETE /api/projects/{id}
+1. Убедитесь что SQL Server запущен.
+2. При необходимости обновите строку подключения в `appsettings.json`.
+3. Выполните: `dotnet run`
+4. Миграции и seed-данные применяются автоматически при запуске.
 
-- GET /api/tasks
-- GET /api/tasks/{id}
-- GET /api/tasks/by-project/{projectId}
-- POST /api/tasks
-- PUT /api/tasks/{id}
-- DELETE /api/tasks/{id}
+## Модели
 
-- POST /api/auth/register
-- POST /api/auth/login
+**User** — Id, Username, Email, Password, Role
+**Project** — Id, Name, Description, StartDate, EndDate
+**TaskItem** — Id, Title, Description, Status, CreatedAt, DueDate, AssignedTo, ProjectId
 
+## Kanban-статусы задач
+
+- Запланировано
+- В работе
+- Выполнено
+
+## API endpoints
+
+### Авторизация
+- `POST /api/auth/register` — регистрация пользователя
+- `POST /api/auth/login` — авторизация пользователя
+
+### Проекты (CRUD)
+- `GET /api/projects` — все проекты
+- `GET /api/projects/{id}` — проект по ID
+- `POST /api/projects` — создать проект
+- `PUT /api/projects/{id}` — обновить проект
+- `DELETE /api/projects/{id}` — удалить проект
+
+### Задачи (CRUD + Kanban)
+- `GET /api/tasks` — все задачи
+- `GET /api/tasks/{id}` — задача по ID
+- `GET /api/tasks/by-project/{projectId}` — задачи проекта
+- `POST /api/tasks` — создать задачу
+- `PUT /api/tasks/{id}` — обновить задачу
+- `PATCH /api/tasks/{id}/status` — изменить статус задачи
+- `DELETE /api/tasks/{id}` — удалить задачу

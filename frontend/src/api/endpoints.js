@@ -1,6 +1,5 @@
 import apiClient from './axiosConfig';
 
-// Projects API
 export const projectsApi = {
   getAll: () => apiClient.get('/projects'),
   getById: (id) => apiClient.get(`/projects/${id}`),
@@ -9,30 +8,17 @@ export const projectsApi = {
   delete: (id) => apiClient.delete(`/projects/${id}`),
 };
 
-// Tasks API
 export const tasksApi = {
-  getAll: (projectId) => apiClient.get(`/tasks${projectId ? `?projectId=${projectId}` : ''}`),
+  getAll: () => apiClient.get('/tasks'),
   getById: (id) => apiClient.get(`/tasks/${id}`),
+  getByProject: (projectId) => apiClient.get(`/tasks/by-project/${projectId}`),
   create: (data) => apiClient.post('/tasks', data),
   update: (id, data) => apiClient.put(`/tasks/${id}`, data),
+  updateStatus: (id, status) => apiClient.patch(`/tasks/${id}/status`, { status }),
   delete: (id) => apiClient.delete(`/tasks/${id}`),
 };
 
-// Auth API
 export const authApi = {
   register: (data) => apiClient.post('/auth/register', data),
   login: (data) => apiClient.post('/auth/login', data),
-  logout: () => apiClient.post('/auth/logout'),
-};
-
-// Weather API
-export const weatherApi = {
-  getForecast: () => apiClient.get('/weatherforecast'),
-};
-
-export default {
-  projectsApi,
-  tasksApi,
-  authApi,
-  weatherApi,
 };

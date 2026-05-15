@@ -5,45 +5,46 @@
 .hero {
     text-align: center;
     padding: 4rem 2rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--primary-color), #4a9eff);
     color: white;
     border-radius: var(--border-radius);
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
 }
 
 .hero h1 {
     margin-bottom: 1rem;
-    font-size: 3rem;
+    font-size: 2.8rem;
 }
 
 .hero p {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     opacity: 0.9;
 }
 
 .features {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
 }
 
 .feature-card {
-    background: white;
+    background: var(--bg-card);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     text-align: center;
     transition: var(--transition);
+    border: 1px solid var(--border-color);
 }
 
 .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
 }
 
 .feature-icon {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
 }
 
@@ -53,20 +54,21 @@
 }
 
 .feature-card p {
-    color: #666;
-    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
 }
 
 .cta-section {
-    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-    color: white;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
     padding: 3rem 2rem;
     border-radius: var(--border-radius);
     text-align: center;
 }
 
 .cta-section h2 {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .cta-buttons {
@@ -74,21 +76,6 @@
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-}
-
-.btn-primary,
-.btn-secondary {
-    background-color: white;
-    color: var(--primary-color);
-}
-
-.btn-secondary {
-    color: var(--secondary-color);
-}
-
-.btn-primary:hover,
-.btn-secondary:hover {
-    background-color: #f0f0f0;
 }
 
 @media (max-width: 768px) {
@@ -102,5 +89,6 @@
 
     .cta-buttons {
         flex-direction: column;
+        align-items: center;
     }
 }
