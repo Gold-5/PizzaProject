@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="home-page">
       <div className="hero">
@@ -37,8 +40,12 @@ export default function Home() {
       <div className="cta-section">
         <h2>Начните работу прямо сейчас</h2>
         <div className="cta-buttons">
-          <button className="btn btn-primary btn-large">Создать проект</button>
-          <button className="btn btn-secondary btn-large">Просмотреть задачи</button>
+          <button className="btn btn-primary btn-large" onClick={() => navigate('/projects')}>
+            Создать проект
+          </button>
+          <button className="btn btn-secondary btn-large" onClick={() => navigate('/tasks')}>
+            Просмотреть задачи
+          </button>
         </div>
       </div>
     </div>

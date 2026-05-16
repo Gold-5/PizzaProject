@@ -51,6 +51,16 @@
     color: #e55a2b;
 }
 
+.error-message-auth {
+    background-color: #fee;
+    color: #c33;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #c33;
+    font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
     .auth-card {
         padding: 1.5rem;
