@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PizzaProject.Api.Models
 {
@@ -19,6 +20,7 @@ namespace PizzaProject.Api.Models
         public User? AssignedTo { get; set; }
 
         public int ProjectId { get; set; }
+        [JsonIgnore]
         public Project? Project { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

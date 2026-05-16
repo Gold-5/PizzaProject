@@ -18,7 +18,13 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+    options.AddDefaultPolicy(p =>
+    {
+        p.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 builder.Services.AddSession(options =>
