@@ -1,11 +1,25 @@
-import { createContext, useState, useCallback } from 'react';
+import { createContext, useState, useCallback, useEffect } from 'react';
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Инициализация из localStorage при загрузке
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+        setIsAuthenticated(true);
+      } catch (err) {
+        console.error('Ошибка парсинга пользователя:', err);
+      }
+    }
+    setLoading(false);
+  }, []);
 
   const login = useCallback((userData) => {
     setUser(userData);
@@ -16,7 +30,6 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('authToken');
     localStorage.removeItem('user');
   }, []);
 

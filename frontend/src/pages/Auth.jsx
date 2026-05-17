@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../api/endpoints';
+import { AuthContext } from '../context/AuthContext';
 import '../styles/Auth.css';
 
 export default function Auth() {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,17 +22,15 @@ export default function Auth() {
     try {
       if (isLogin) {
         const response = await authApi.login({ email, password });
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+        login(response.data);
         navigate('/');
       } else {
         const response = await authApi.register({ email, password, username: name });
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+        login(response.data);
         navigate('/');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Ошибка аутентификации');
+      setError(err.response?.data?.error || 'Ошибка аутентификации');
       console.error('Auth error:', err);
     } finally {
       setLoading(false);

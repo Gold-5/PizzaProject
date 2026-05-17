@@ -30,24 +30,58 @@ export default function Tasks() {
     }
   };
 
+  const handleStatusChange = async (taskId, newStatus) => {
+    try {
+      // Оптимистичное обновление
+      setTasks(tasks.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)));
+
+      await tasksApi.updateStatus(taskId, newStatus);
+    } catch (err) {
+      setError(err);
+      console.error('Ошибка изменения статуса:', err);
+      // Перезагружаем если ошибка
+      loadTasks();
+    }
+  };
+
   const handleCreateTask = async () => {
     if (!newTask.title.trim() || !newTask.projectId) {
       alert('Введите название и выберите проект');
       return;
     }
     try {
-      await tasksApi.create(newTask);
+      const response = await tasksApi.create(newTask);
+      // Добавляем новую задачу в список сразу
+      setTasks([...tasks, response.data]);
       setShowModal(false);
       setNewTask({ title: '', description: '', projectId: '' });
-      loadTasks();
     } catch (err) {
       setError(err);
       console.error('Ошибка создания задачи:', err);
+      // Перезагружаем если ошибка
+      loadTasks();
     }
   };
 
   const handleOpenTask = (taskId) => {
     navigate(`/tasks/${taskId}`);
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    if (confirm('Вы уверены что хотите удалить задачу?')) {
+      try {
+        // Оптимистичное обновление UI
+        setTasks(tasks.filter((t) => t.id !== taskId));
+
+        // Отправляем запрос на сервер
+        await tasksApi.delete(taskId);
+      } catch (err) {
+        setError(err);
+        console.error('Ошибка удаления задачи:', err);
+        // Перезагружаем задачи если ошибка
+        loadTasks();
+      }
+    }
   };
 
   if (loading) return <LoadingSpinner />;
@@ -73,19 +107,33 @@ export default function Tasks() {
           {tasks.map((task) => (
             <div key={task.id} className="task-item">
               <div className="task-header">
-                <h3>{task.name}</h3>
-                <span className={`task-status status-${task.status?.toLowerCase() || 'pending'}`}>
-                  {task.status || 'Не определен'}
-                </span>
+                <h3>{task.title}</h3>
+                <select
+                  className={`task-status status-${task.status?.toLowerCase() || 'pending'}`}
+                  value={task.status}
+                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                >
+                  <option value="Запланировано">Запланировано</option>
+                  <option value="В работе">В работе</option>
+                  <option value="Выполнено">Выполнено</option>
+                </select>
               </div>
               <p className="task-description">{task.description}</p>
               <div className="task-footer">
                 <span className="task-date">
                   {new Date(task.createdAt).toLocaleDateString('ru-RU')}
                 </span>
-                <button className="btn btn-sm" onClick={() => handleOpenTask(task.id)}>
-                  Открыть
-                </button>
+                <div className="task-actions">
+                  <button className="btn btn-sm" onClick={() => handleOpenTask(task.id)}>
+                    Открыть
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDeleteTask(task.id)}
+                  >
+                    Удалить
+                  </button>
+                </div>
               </div>
             </div>
           ))}

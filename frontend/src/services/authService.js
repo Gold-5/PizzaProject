@@ -2,10 +2,10 @@ import { authApi } from '../api/endpoints';
 import { getErrorMessage } from '../utils/helpers';
 
 export const AuthService = {
-  async register(email, password, name) {
+  async register(email, password, username) {
     try {
-      const response = await authApi.register({ email, password, name });
-      const { token, user } = response.data;
+      const response = await authApi.register({ email, password, username });
+      const user = response.data;
 
       if (token) {
         localStorage.setItem('authToken', token);
@@ -21,14 +21,13 @@ export const AuthService = {
   async login(email, password) {
     try {
       const response = await authApi.login({ email, password });
-      const { token, user } = response.data;
+      const user = response.data;
 
-      if (token) {
-        localStorage.setItem('authToken', token);
+      if (user) {
         localStorage.setItem('user', JSON.stringify(user));
       }
 
-      return { user, token };
+      return user;
     } catch (error) {
       throw new Error(getErrorMessage(error));
     }
@@ -51,10 +50,11 @@ export const AuthService = {
   },
 
   isAuthenticated() {
-    return !!localStorage.getItem('authToken');
+    return !!localStorage.getItem('user');
   },
 
   getAuthToken() {
-    return localStorage.getItem('authToken');
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user)?.id : null;
   },
 };

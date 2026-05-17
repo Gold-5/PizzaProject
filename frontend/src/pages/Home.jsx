@@ -1,14 +1,20 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import '../styles/Home.css';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   return (
     <div className="home-page">
       <div className="hero">
         <h1>Добро пожаловать в Pizza Project</h1>
         <p>Система управления проектами доставки пиццы</p>
+        {isAuthenticated && (
+          <p className="welcome-user">Привет, {user?.username || user?.email}!</p>
+        )}
       </div>
 
       <div className="features">
@@ -40,12 +46,25 @@ export default function Home() {
       <div className="cta-section">
         <h2>Начните работу прямо сейчас</h2>
         <div className="cta-buttons">
-          <button className="btn btn-primary btn-large" onClick={() => navigate('/projects')}>
-            Создать проект
-          </button>
-          <button className="btn btn-secondary btn-large" onClick={() => navigate('/tasks')}>
-            Просмотреть задачи
-          </button>
+          {isAuthenticated ? (
+            <>
+              <button className="btn btn-primary btn-large" onClick={() => navigate('/projects')}>
+                Создать проект
+              </button>
+              <button className="btn btn-secondary btn-large" onClick={() => navigate('/tasks')}>
+                Просмотреть задачи
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-primary btn-large" onClick={() => navigate('/auth')}>
+                Войти в систему
+              </button>
+              <button className="btn btn-secondary btn-large" onClick={() => navigate('/auth')}>
+                Зарегистрироваться
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

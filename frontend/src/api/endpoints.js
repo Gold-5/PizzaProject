@@ -11,10 +11,12 @@ export const projectsApi = {
 
 // Tasks API
 export const tasksApi = {
-  getAll: (projectId) => apiClient.get(`/tasks${projectId ? `?projectId=${projectId}` : ''}`),
+  getAll: () => apiClient.get('/tasks'),
+  getByProject: (projectId) => apiClient.get(`/tasks/project/${projectId}`),
   getById: (id) => apiClient.get(`/tasks/${id}`),
   create: (data) => apiClient.post('/tasks', data),
   update: (id, data) => apiClient.put(`/tasks/${id}`, data),
+  updateStatus: (id, status) => apiClient.patch(`/tasks/${id}/status`, { status }),
   delete: (id) => apiClient.delete(`/tasks/${id}`),
 };
 

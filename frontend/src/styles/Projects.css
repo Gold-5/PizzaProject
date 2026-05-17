@@ -151,6 +151,11 @@
     color: #999;
 }
 
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
 /* Modal */
 .modal-overlay {
     position: fixed;
@@ -210,6 +215,92 @@
 
 .modal-actions button {
     min-width: 100px;
+}
+
+/* Project Details */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-danger.btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+.project-detail {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.project-description {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.project-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.tasks-section {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.section-header h2 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+/* Task Status Select */
+.task-status[type="select"],
+select.task-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+}
+
+select.task-status {
+    background: none;
+    border: 1px solid white;
 }
 
 @media (max-width: 768px) {
