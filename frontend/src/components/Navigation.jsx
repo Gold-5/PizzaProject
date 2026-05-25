@@ -31,6 +31,11 @@ export default function Navigation() {
           {isAuthenticated && (
             <>
               <li className="nav-item">
+                <Link to="/board" className={`nav-link ${isActive('/board') ? 'active' : ''}`}>
+                  📋 Доска
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link
                   to="/projects"
                   className={`nav-link ${isActive('/projects') ? 'active' : ''}`}

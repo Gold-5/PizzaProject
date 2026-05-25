@@ -16,7 +16,7 @@ namespace PizzaProject.Api.Services
         public async Task<TaskItem> CreateAsync(TaskItem taskItem)
         {
             var projectExists = await _context.Projects.AnyAsync(p => p.Id == taskItem.ProjectId);
-            if (!projectExists) 
+            if (!projectExists)
                 throw new ArgumentException("Проект не найден");
 
             taskItem.CreatedAt = DateTime.UtcNow;
@@ -81,7 +81,7 @@ namespace PizzaProject.Api.Services
 
         public async Task<bool> UpdateStatusAsync(int id, string status)
         {
-            var validStatuses = new[] { "Запланировано", "В работе", "Выполнено" };
+            var validStatuses = new[] { "Запланировано", "В работе", "На проверке", "Завершено" };
             if (!validStatuses.Contains(status))
                 throw new ArgumentException("Неверный статус");
 

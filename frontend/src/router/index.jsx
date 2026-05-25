@@ -3,6 +3,7 @@ import App from '../App';
 import Home from '../pages/Home';
 import Projects from '../pages/Projects';
 import Tasks from '../pages/Tasks';
+import Board from '../pages/Board';
 import Auth from '../pages/Auth';
 import NotFound from '../pages/NotFound';
 
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: 'tasks/:id',
         element: <Tasks />,
+      },
+      {
+        path: 'board',
+        element: <Board />,
       },
       {
         path: 'auth',
